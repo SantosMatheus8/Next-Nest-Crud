@@ -21,7 +21,7 @@ export const Button = ({
   return (
     <button
       disabled={disabled}
-      className={`disabled:border-disabled disabled:bg-disabled flex items-center justify-center gap-2 rounded-lg bg-primary p-2 font-medium transition-opacity duration-200 disabled:text-white ${
+      className={`disabled:border-disabled disabled:bg-disabled flex items-center justify-center gap-2 rounded-lg bg-primary p-3 font-medium transition-opacity duration-200 disabled:text-white ${
         variant === 'contained'
           ? 'bg-primary text-white'
           : 'border-2 border-primary bg-white text-primary'

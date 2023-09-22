@@ -1,5 +1,3 @@
-// Table.tsx
-
 import { useState } from "react";
 import { IconClose } from "../Icons/IconClose";
 import ProductModal from "../ProductModal";
@@ -14,15 +12,16 @@ export type TableProps = {
 
 type Props = {
   rows: TableProps[];
-  onDelete: (id: number) => void; // Adicione a prop onDelete aqui
+  onDelete: (id: number) => void; 
+  setProducts:any;
 };
 
-export const Table = ({ rows, onDelete }: Props) => {
+export const Table = ({ rows, onDelete, setProducts}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productId, setProductId] = useState(0);
+  const [product, setProduct] = useState({} as TableProps);
 
-  const openModal = (rowId: number) => {
-    setProductId(rowId);
+  const openModal = (row: TableProps) => {
+    setProduct(row);
     setIsModalOpen(true);
   };
 
@@ -31,9 +30,10 @@ export const Table = ({ rows, onDelete }: Props) => {
   };
 
   const handleSubmit = async (product: any) => {
-console.log('--------------------', productId)
-    await updateProduct(String(productId),{ name: product.name, category : product.category, price : product.price });
-      closeModal();
+    await updateProduct(String(product.id),{name : product.name, category : product.category, price : product.price });
+    closeModal();
+    const response = await getProducts()
+    setProducts(response.data);
     } 
   return (
     <section className="w-full">
@@ -50,17 +50,18 @@ console.log('--------------------', productId)
           <span className="w-1/4">{row.category}</span>
           <span className="w-1/4">{row.price}</span>
           <div className="flex w-1/4 items-center gap-2">
-            <button onClick={() => openModal(row.id)}>Editar</button>
+            <button onClick={() => openModal(row)}>Editar</button>
             <button onClick={() => onDelete(row.id)}> 
               <IconClose />
             </button>
           </div>
         </div>
       ))}
-          <ProductModal
+      <ProductModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={handleSubmit}
+        product={product}
         title="Editar Produto"
       />
     </section>

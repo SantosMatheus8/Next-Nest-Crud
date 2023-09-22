@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TableProps } from '../Table';
 import Modal from 'react-modal';
 import { Button } from '../Button';
@@ -10,16 +9,27 @@ type ProductModalProps = {
   onClose: () => void;
   onSubmit: (formData: Partial<TableProps>) => void;
   title: string;
+  product?:TableProps;
 };
 
-export default function ProductModal({ isOpen, onClose, onSubmit,title }:ProductModalProps) {
+export default function ProductModal({ isOpen, onClose, onSubmit,title,product }:ProductModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     price: 0,
   });
 
-  const handleChange = (e:any) => {
+  useEffect(() => {
+    console.log('jhkhjkhkjhjkkhjhjkhjkhjkhjkhjk', product)
+
+    if (product){
+    setFormData(product);} 
+  }, [isOpen]);
+  
+
+  const handleChange = (e:any) => { 
+    console.log('jhkhjkhkjhjkkhjhjkhjkhjkhjkhjk', product)
+
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -30,42 +40,35 @@ export default function ProductModal({ isOpen, onClose, onSubmit,title }:Product
     price: 0,});
   };
 
+  const handleClose = () => {
+    onClose();
+    handleResetForm();
+  };
+
   const handleSubmit = (e:any) => {
     e.preventDefault();
     console.log(formData)
     onSubmit(formData);
+    handleResetForm();
   };
 
   return (
 
-<Modal isOpen={isOpen} className="fixed inset-0 flex items-center justify-center">
-      <div className="modal-content bg-[rgb(252,252,252)] p-4 rounded-md">
-        <h2 className='text-lg mb-4 font-bold'>{title}</h2>
+    <Modal isOpen={isOpen} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60"  >
+      <div className="modal-content bg-[rgb(252,252,252)] p-4 rounded-md w-[400px]">
+        <h2 className='text-lg mb-8 font-bold'>{title}</h2>
         <form onSubmit={handleSubmit}>
-          <div className='flex gap-4 flex-col mb-4'>
-            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] p-1' type="text" name="name" value={formData.name} onChange={handleChange} placeholder='Nome' />
-            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] p-1' type="text" name="category" value={formData.category} onChange={handleChange} placeholder='Categoria' />
-            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] p-1' type="text" name="price" value={formData.price} onChange={handleChange} placeholder='Preço' />
+          <div className='flex gap-4 flex-col mb-8'>
+            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] px-2 py-3' type="text" name="name" value={formData.name} onChange={handleChange} placeholder='Nome' />
+            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] px-2 py-3' type="text" name="category" value={formData.category} onChange={handleChange} placeholder='Categoria' />
+            <input className='bg-white rounded-lg	border-2 border-shades-04-40% font-normal	text-[0.875rem] px-2 py-3' type="text" name="price" value={formData.price} onChange={handleChange} placeholder='Preço' />
           </div>
           <div className='flex gap-4 justify-center'>
-          <Button type="submit">Enviar</Button>
-        <Button onClick={onClose} variant='outlined'>Fechar</Button>
+            <Button fullWidth  type="submit">Enviar</Button>
+            <Button fullWidth onClick={handleClose} variant='outlined'>Fechar</Button>
           </div>
         </form>
       </div>
-      </Modal>
-    
+    </Modal>   
   );
 }
-
-
-
-// <section className="mb-10">
-// <form onSubmit={handleSubmit}>
-//   <input type="text" name="name" placeholder="Nome do produto" className="w-1/2 mb-5" />
-//   <input type="text" name="category" placeholder="Categoria" className="w-1/2 mb-5" />
-//   <input type="text" name="price" placeholder="Preço" className="w-1/2 mb-5" />
-//   <Button type="submit" fullWidth>
-//     Cadastrar Produto
-//   </Button>
-// </form>
